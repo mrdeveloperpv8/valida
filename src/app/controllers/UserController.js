@@ -22,7 +22,7 @@ class UserController {
 			nickname,
 			password,
 			balance: 0,
-			active: 0,
+			active: 1,
 			level: 1
 		});
 		return res.json(user);
