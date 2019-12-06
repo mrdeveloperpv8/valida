@@ -28,6 +28,13 @@ class UserController {
 		return res.json(user);
 	}
 
+	async logout(req, res) {
+		req.userId = null;
+		req.headers.authorization = null;
+
+		return res.send("OK");
+	}
+
 	async index(req, res) {
 		const user = await User.findById(req.userId);
 

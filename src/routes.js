@@ -23,6 +23,8 @@ routes.get(
 	controllers.UserController.ammount
 );
 
+routes.get("/logout", controllers.UserController.logout);
+
 routes.get(
 	"/products/:purchase",
 	authMiddleware,
