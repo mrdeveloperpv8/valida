@@ -17,6 +17,11 @@ routes.post("/user/validate-token", controllers.SessionController.verifyToken);
 routes.put("/user", authMiddleware, controllers.UserController.store);
 routes.post("/user/verify", authMiddleware, controllers.UserController.verify);
 routes.get("/user", authMiddleware, controllers.UserController.index);
+routes.get(
+	"/userAmmount/:id",
+	authMiddleware,
+	controllers.UserController.ammount
+);
 
 routes.get(
 	"/products/:purchase",
