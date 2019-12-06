@@ -13,8 +13,7 @@ const PurchaseSchema = new mongoose.Schema({
 
 	purchaser: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "User",
-		required: true
+		ref: "User"
 	},
 
 	code: {

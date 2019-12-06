@@ -15,6 +15,8 @@ routes.post("/user/authenticate", controllers.SessionController.store);
 routes.post("/user/validate-token", controllers.SessionController.verifyToken);
 
 routes.put("/user", authMiddleware, controllers.UserController.store);
+routes.post("/user/verify", authMiddleware, controllers.UserController.verify);
+routes.get("/user", authMiddleware, controllers.UserController.index);
 
 routes.get(
 	"/products/:purchase",
@@ -36,15 +38,29 @@ routes.delete(
 
 routes.get("/purchase", authMiddleware, controllers.PurchaseController.index);
 routes.get(
+	"/purchaseShowcase",
+	authMiddleware,
+	controllers.PurchaseController.indexShowcases
+);
+
+routes.get(
 	"/purchase/:id",
 	authMiddleware,
 	controllers.PurchaseController.show
 );
+
 routes.post(
 	"/purchase/:showcase",
 	authMiddleware,
 	controllers.PurchaseController.store
 );
+
+routes.post(
+	"/purchase",
+	authMiddleware,
+	controllers.PurchaseController.storeShowcase
+);
+
 routes.put(
 	"/purchase/:id",
 	authMiddleware,

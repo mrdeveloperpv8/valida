@@ -39,7 +39,8 @@ const ProductSchema = new mongoose.Schema({
 	},
 
 	usedBy: {
-		type: mongoose.Schema.Types.ObjectId
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User"
 	},
 
 	usedDate: {
@@ -47,7 +48,8 @@ const ProductSchema = new mongoose.Schema({
 	},
 
 	purchaseReference: {
-		type: mongoose.Schema.Types.ObjectId
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Purchase"
 	},
 
 	createdAt: {

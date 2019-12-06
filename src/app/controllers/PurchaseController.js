@@ -1,5 +1,6 @@
 const Purchase = require("../models/Purchase");
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 
 class PurchaseController {
 	async index(req, res) {
@@ -22,6 +23,19 @@ class PurchaseController {
 		return res.json(purchases);
 	}
 
+	async indexShowcases(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const purchases = await Purchase.find({ showcase: true });
+		return res.json(purchases);
+	}
+
 	async show(req, res) {
 		const user = await User.findById(req.userId);
 
@@ -31,30 +45,29 @@ class PurchaseController {
 			});
 		}
 
-		const purchase = await Purchase.find({
-			purchaser: user,
-			id: req.params.id
+		const purchases = await Purchase.find({
+			purchaser: user
 		});
 
-		return res.json(purchase);
+		return res.json(purchases);
 	}
 
 	async store(req, res) {
 		const user = await User.findById(req.userId);
 		const showcase = await Purchase.findById(req.params.showcase);
 
-		if (user.level == 17) {
+		if (user.level == 17 && !showcase) {
 			const purchase = await Purchase.create(req.body);
 			return res.json(purchase);
 		}
 
-		if (!user || !showcase) {
+		if (!user && !showcase) {
 			return res.status(400).json({
 				error: "Parece que você não pode fazer isso."
 			});
 		}
 
-		const dataCode = `${user}-${price}+${ammount}.${Date.now}`;
+		const dataCode = `${user}-${showcase.price}+${showcase.price}.${Date.now}`;
 		const code = await bcrypt.hash(dataCode, 3);
 
 		const { paymentMethodNumber, paymentMethod } = req.body;
@@ -71,6 +84,50 @@ class PurchaseController {
 			statusNumber: 20,
 			status: "Pendente",
 			showcase: false
+		});
+
+		return res.json(purchase);
+	}
+
+	async storeShowcase(req, res) {
+		const user = await User.findById(req.userId);
+
+		const {
+			title,
+			description,
+			price,
+			ammount,
+			paymentMethodNumber,
+			paymentMethod
+		} = req.body;
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const dataCode = `${user}-${price}+${ammount}.${Date.now}`;
+		const code = await bcrypt.hash(dataCode, 3);
+
+		const purchase = await Purchase.create({
+			title: title,
+			description: description,
+			code: code,
+			price: price,
+			ammount: ammount,
+			available: 0,
+			paymentMethodNumber: paymentMethodNumber,
+			paymentMethod: paymentMethod,
+			statusNumber: 20,
+			status: "Pendente",
+			showcase: true
 		});
 
 		return res.json(purchase);
