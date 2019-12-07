@@ -64,9 +64,13 @@ class ProductController {
 		//{ CODE HERE }
 
 		//REMOVE CREDITO USER
-		await User.findByIdAndUpdate(req.userId, {
-			balance: user.balance - approvals
-		});
+		await User.findByIdAndUpdate(
+			req.userId,
+			{
+				balance: user.balance - approvals
+			},
+			{ new: true }
+		);
 
 		return res.json({
 			data: [

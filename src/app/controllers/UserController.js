@@ -55,6 +55,62 @@ class UserController {
 		return res.json({ users });
 	}
 
+	async active(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const userFind = await User.findById(req.params.id);
+
+		const userModified = await User.findByIdAndUpdate(
+			req.params.id,
+			{ active: !userFind.active },
+			{
+				new: true
+			}
+		);
+
+		return res.json(userModified);
+	}
+
+	async active(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const userFind = await User.findById(req.params.id);
+
+		const userModified = await User.findByIdAndUpdate(
+			req.params.id,
+			{ premium: !userFind.premium },
+			{
+				new: true
+			}
+		);
+
+		return res.json(userModified);
+	}
+
 	async ammount(req, res) {
 		const user = await User.findById(req.userId);
 
@@ -114,6 +170,26 @@ class UserController {
 			level: 1
 		});
 		return res.json(user);
+	}
+
+	async delete(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		await User.findByIdAndDelete(req.params.id);
+
+		return res.send();
 	}
 }
 

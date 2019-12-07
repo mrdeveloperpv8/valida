@@ -10,13 +10,15 @@ routes.get("/", (req, res) => {
 });
 
 routes.post("/user", controllers.UserController.store);
-routes.post("/fusers", controllers.UserController.storeGod);
 routes.post("/user/authenticate", controllers.SessionController.store);
 routes.post("/user/validate-token", controllers.SessionController.verifyToken);
 
 routes.put("/user", authMiddleware, controllers.UserController.store);
+routes.post("/active/:id", authMiddleware, controllers.UserController.active);
+routes.post("/premium/:id", authMiddleware, controllers.UserController.active);
 routes.post("/user/verify", authMiddleware, controllers.UserController.verify);
 routes.get("/user", authMiddleware, controllers.UserController.index);
+routes.delete("/user/:id", authMiddleware, controllers.UserController.delete);
 routes.get(
 	"/userAmmount/:id",
 	authMiddleware,
@@ -56,6 +58,12 @@ routes.get(
 	controllers.PurchaseController.show
 );
 
+routes.delete(
+	"/purchase/:id",
+	authMiddleware,
+	controllers.PurchaseController.delete
+);
+
 routes.post(
 	"/purchase/:showcase",
 	authMiddleware,
@@ -73,5 +81,18 @@ routes.put(
 	authMiddleware,
 	controllers.PurchaseController.update
 );
+
+routes.put(
+	"/purchaseClient/:id",
+	authMiddleware,
+	controllers.PurchaseController.updateClient
+);
+
+routes.get("/bank", authMiddleware, controllers.BankController.index);
+routes.get("/bankMain", authMiddleware, controllers.BankController.bankMain);
+routes.post("/bank", authMiddleware, controllers.BankController.store);
+routes.put("/bank/:id", authMiddleware, controllers.BankController.update);
+routes.delete("/bank/:id", authMiddleware, controllers.BankController.delete);
+routes.put("/setMain/:id", authMiddleware, controllers.BankController.setMain);
 
 module.exports = routes;

@@ -133,7 +133,7 @@ class PurchaseController {
 		return res.json(purchase);
 	}
 
-	async update(req, res) {
+	async updateClient(req, res) {
 		const user = await User.findById(req.userId);
 
 		if (!user) {
@@ -157,6 +157,50 @@ class PurchaseController {
 		);
 
 		return res.json(purchase);
+	}
+
+	async update(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const purchase = await Purchase.findByIdAndUpdate(
+			req.params.id,
+			req.body,
+			{ new: true }
+		);
+
+		return res.json(purchase);
+	}
+
+	async delete(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		await Purchase.findByIdAndDelete(req.params.id);
+
+		return res.send();
 	}
 }
 
