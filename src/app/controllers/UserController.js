@@ -83,7 +83,7 @@ class UserController {
 		return res.json(userModified);
 	}
 
-	async active(req, res) {
+	async premium(req, res) {
 		const user = await User.findById(req.userId);
 
 		if (!user) {
