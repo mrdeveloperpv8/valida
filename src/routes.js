@@ -14,6 +14,12 @@ routes.post("/user/authenticate", controllers.SessionController.store);
 routes.post("/user/validate-token", controllers.SessionController.verifyToken);
 
 routes.put("/user", authMiddleware, controllers.UserController.store);
+routes.get(
+	"/checkPremium",
+	authMiddleware,
+	controllers.UserController.checkPremium
+);
+
 routes.post("/active/:id", authMiddleware, controllers.UserController.active);
 routes.post("/premium/:id", authMiddleware, controllers.UserController.premium);
 routes.post("/user/verify", authMiddleware, controllers.UserController.verify);
@@ -76,10 +82,28 @@ routes.post(
 	controllers.PurchaseController.storeShowcase
 );
 
+routes.post(
+	"/cancelPurchase/:id",
+	authMiddleware,
+	controllers.PurchaseController.cancelPurchase
+);
+
+routes.post(
+	"/sendAttachment/:id",
+	authMiddleware,
+	controllers.PurchaseController.sendAttachment
+);
+
 routes.put(
 	"/purchase/:id",
 	authMiddleware,
 	controllers.PurchaseController.update
+);
+
+routes.post(
+	"/status/:id",
+	authMiddleware,
+	controllers.PurchaseController.status
 );
 
 routes.put(

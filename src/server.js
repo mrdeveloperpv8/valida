@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const databaseConfig = require("./config/database");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 class App {
 	constructor() {
@@ -22,6 +23,7 @@ class App {
 	}
 
 	middlewares() {
+		this.express.use(bodyParser.json({ limit: "20mb" }));
 		this.express.use(express.json());
 		this.express.use(cors());
 	}

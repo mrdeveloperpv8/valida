@@ -15,7 +15,10 @@ class PurchaseController {
 		let purchases = null;
 
 		if (user.level == 17) {
-			purchases = await Purchase.find();
+			purchases = await Purchase.find({
+				showcase: false,
+				purchaser: { $ne: null }
+			}).populate("purchaser");
 		} else {
 			purchases = await Purchase.find({ purchaser: user });
 		}
@@ -50,6 +53,102 @@ class PurchaseController {
 		});
 
 		return res.json(purchases);
+	}
+
+	async cancelPurchase(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const purchase = await Purchase.findById(req.params.id);
+
+		if (user.level !== 17) {
+			if (purchase.purchaser !== user.id) {
+				return res.status(400).json({
+					error: "Parece que você não pode fazer isso."
+				});
+			}
+		}
+
+		const purchasesUpdated = await Purchase.findByIdAndUpdate(purchase.id, {
+			status: "Cancelado"
+		});
+
+		return res.json(purchasesUpdated);
+	}
+
+	async status(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		var purchase = null;
+
+		switch (req.body.code) {
+			case 1:
+				{
+					purchase = await Purchase.findByIdAndUpdate(req.params.id, {
+						status: "Aprovado"
+					});
+
+					const userPurchase = await User.findById(
+						purchase.purchaser
+					);
+					await User.findByIdAndUpdate(user.id, {
+						balance: userPurchase.balance + purchase.ammount
+					});
+				}
+				break;
+			case 2:
+				purchase = await Purchase.findByIdAndUpdate(req.params.id, {
+					status: "Recusado"
+				});
+				break;
+		}
+
+		return res.json(purchase);
+	}
+
+	async sendAttachment(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const purchase = await Purchase.findById(req.params.id);
+
+		if (user.level !== 17) {
+			if (purchase.purchaser !== user.id) {
+				return res.status(400).json({
+					error: "Parece que você não pode fazer isso."
+				});
+			}
+		}
+		const { attachment } = req.body;
+
+		const purchasesUpdated = await Purchase.findByIdAndUpdate(purchase.id, {
+			attachment: attachment,
+			status: "Analise"
+		});
+
+		return res.json(purchasesUpdated);
 	}
 
 	async store(req, res) {

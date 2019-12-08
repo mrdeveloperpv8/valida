@@ -31,6 +31,12 @@ class BankController {
 			});
 		}
 
+		if (!user.premium) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
 		const bank = await Bank.find({ main: true });
 
 		return res.json(bank[0]);

@@ -52,6 +52,10 @@ const PurchaseSchema = new mongoose.Schema({
 		default: 20
 	},
 
+	attachment: {
+		type: String
+	},
+
 	status: {
 		type: String,
 		required: true,

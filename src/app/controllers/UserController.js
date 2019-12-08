@@ -140,6 +140,21 @@ class UserController {
 		});
 	}
 
+	async checkPremium(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que houve um problema.",
+				verify: false
+			});
+		}
+
+		return res.json({
+			verify: user.premium
+		});
+	}
+
 	async storeGod(req, res) {
 		const { email, nickname, password, startUserCode } = req.body;
 
