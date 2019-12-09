@@ -28,39 +28,18 @@ class TesteController {
 			await new Promise((resolve, reject) =>
 				this.efetuaTeste(user, null, resolve, reject)
 			)
-				.then(result => {
+				.then(() => {
 					return res.json({
 						message: "Teste finalizado com sucesso !"
 					});
 				})
-				.catch(err => {
+				.catch(() => {
 					return res.status(400).json({
 						message:
 							"Teste finalizado por falta de cartão no estoque."
 					});
 				});
 		}
-
-		// await Promise.all(funcs).then(results => {
-		// 	results.map(result => {
-		// 		if (result.code == 500) {
-		// 			return res.status(400).json({
-		// 				message:
-		// 					"Teste finalizado por falta de cartão no estoque."
-		// 			});
-		// 		}
-		// 	});
-		// });
-
-		// for (let index = 0; index < ammount; index++) {
-		// 	const resultCode = await this.efetuaTeste(user, null);
-
-		// 	if (resultCode.code == 500) {
-		// 		return res.status(400).json({
-		// 			message: "Teste finalizado por falta de cartão no estoque."
-		// 		});
-		// 	}
-		// }
 	}
 
 	async efetuaTeste(user, ccNumber, resolve, reject) {
@@ -131,14 +110,14 @@ class TesteController {
 					usedBy: user.id,
 					usedDate: Date.now()
 				}).then(async () => {
-					await new Promise((resolve, reject) =>
-						this.efetuaTeste(user, cc.number, resolve, reject)
+					await new Promise((resolve1, reject2) =>
+						this.efetuaTeste(user, cc.number, resolve1, reject2)
 					)
 						.then(() => {
 							resolve();
 							return;
 						})
-						.catch(err => {
+						.catch(() => {
 							reject();
 							return;
 						});
@@ -152,14 +131,14 @@ class TesteController {
 					usedBy: user.id,
 					usedDate: Date.now()
 				}).then(async () => {
-					await new Promise((resolve, reject) =>
-						this.efetuaTeste(user, cc.number, resolve, reject)
+					await new Promise((resolve1, reject2) =>
+						this.efetuaTeste(user, cc.number, resolve1, reject2)
 					)
 						.then(() => {
 							resolve();
 							return;
 						})
-						.catch(err => {
+						.catch(() => {
 							reject();
 							return;
 						});
