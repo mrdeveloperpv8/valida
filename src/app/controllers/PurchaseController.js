@@ -156,7 +156,9 @@ class PurchaseController {
 			});
 		}
 
-		const purchase = await Purchase.findById(req.params.id);
+		const purchase = await Purchase.findById(req.params.id).populate(
+			"purchaser"
+		);
 
 		if (user.level !== 17) {
 			if (purchase.purchaser !== user) {
