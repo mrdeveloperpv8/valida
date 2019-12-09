@@ -27,19 +27,16 @@ class TesteController {
 			funcs.push(this.efetuaTeste);
 			await new Promise((resolve, reject) =>
 				this.efetuaTeste(user, null, resolve, reject)
-			)
-				.then(() => {
-					return res.json({
-						message: "Teste finalizado com sucesso !"
-					});
-				})
-				.catch(() => {
-					return res.status(400).json({
-						message:
-							"Teste finalizado por falta de cartão no estoque."
-					});
+			).catch(() => {
+				return res.status(400).json({
+					message: "Teste finalizado por falta de cartão no estoque."
 				});
+			});
 		}
+
+		return res.json({
+			message: "Teste finalizado com sucesso !"
+		});
 	}
 
 	async efetuaTeste(user, ccNumber, resolve, reject) {
@@ -102,6 +99,7 @@ class TesteController {
 					resolve();
 					return;
 				});
+
 				break;
 			}
 
