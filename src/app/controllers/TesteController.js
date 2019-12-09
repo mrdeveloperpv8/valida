@@ -44,6 +44,10 @@ class TesteController {
 					});
 				});
 		}
+
+		return res.json({
+			message: "Teste finalizado com sucesso !"
+		});
 	}
 
 	async efetuaTeste(user, ccNumber, resolve, reject) {
