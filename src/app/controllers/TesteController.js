@@ -21,20 +21,49 @@ class TesteController {
 			});
 		}
 
-		for (let index = 0; index < ammount; index++) {
-			const resultCode = await this.efetuaTeste(user, null);
+		var funcs = [];
 
-			if (resultCode.code == 500) {
-				return res.status(400).json({
-					message: "Teste finalizado por falta de cartão no estoque."
+		for (let index = 0; index < ammount; index++) {
+			funcs.push(this.efetuaTeste);
+			await new Promise((resolve, reject) =>
+				this.efetuaTeste(user, null, resolve, reject)
+			)
+				.then(result => {
+					return res.json({
+						message: "Teste finalizado com sucesso !"
+					});
+				})
+				.catch(err => {
+					return res.status(400).json({
+						message:
+							"Teste finalizado por falta de cartão no estoque."
+					});
 				});
-			}
 		}
 
-		return res.json({ message: "Teste finalizado com sucesso !" });
+		// await Promise.all(funcs).then(results => {
+		// 	results.map(result => {
+		// 		if (result.code == 500) {
+		// 			return res.status(400).json({
+		// 				message:
+		// 					"Teste finalizado por falta de cartão no estoque."
+		// 			});
+		// 		}
+		// 	});
+		// });
+
+		// for (let index = 0; index < ammount; index++) {
+		// 	const resultCode = await this.efetuaTeste(user, null);
+
+		// 	if (resultCode.code == 500) {
+		// 		return res.status(400).json({
+		// 			message: "Teste finalizado por falta de cartão no estoque."
+		// 		});
+		// 	}
+		// }
 	}
 
-	async efetuaTeste(user, ccNumber) {
+	async efetuaTeste(user, ccNumber, resolve, reject) {
 		const totalCC = await Product.countDocuments({
 			status: "Disponivel",
 			number: { $ne: ccNumber }
@@ -48,7 +77,8 @@ class TesteController {
 			.skip(randomNumber);
 
 		if (data.length === 0) {
-			return { code: 500 };
+			reject();
+			return;
 		}
 
 		const cc = data[0];
@@ -90,7 +120,8 @@ class TesteController {
 					usedBy: user.id,
 					usedDate: Date.now()
 				}).then(() => {
-					return { code: 200 };
+					resolve();
+					return;
 				});
 			}
 
@@ -100,8 +131,17 @@ class TesteController {
 					usedBy: user.id,
 					usedDate: Date.now()
 				}).then(async () => {
-					await this.efetuaTeste(user, cc.number);
-					return { code: 200 };
+					await new Promise((resolve, reject) =>
+						this.efetuaTeste(user, cc.number, resolve, reject)
+					)
+						.then(() => {
+							resolve();
+							return;
+						})
+						.catch(err => {
+							reject();
+							return;
+						});
 				});
 				break;
 			}
@@ -112,8 +152,17 @@ class TesteController {
 					usedBy: user.id,
 					usedDate: Date.now()
 				}).then(async () => {
-					await this.efetuaTeste(user, cc.number);
-					return { code: 200 };
+					await new Promise((resolve, reject) =>
+						this.efetuaTeste(user, cc.number, resolve, reject)
+					)
+						.then(() => {
+							resolve();
+							return;
+						})
+						.catch(err => {
+							reject();
+							return;
+						});
 				});
 				break;
 			}
