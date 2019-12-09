@@ -21,6 +21,7 @@ class TesteController {
 			});
 		}
 
+		var resultado = 0;
 		var funcs = [];
 		var count = null;
 		for (let index = 0; index < ammount; index++) {
@@ -30,20 +31,25 @@ class TesteController {
 			)
 				.then(() => {
 					if (count === ammount) {
+						resultado = 200;
+
 						return res.json({
 							message: "Teste finalizado com sucesso !"
 						});
 					}
-
 					count = count + 1;
 				})
 				.catch(() => {
+					resultado = 500;
+
 					return res.status(400).json({
 						message:
 							"Teste finalizado por falta de cartão no estoque."
 					});
 				});
 		}
+
+		console.log(resultado);
 
 		return res.json({
 			message: "Teste finalizado com sucesso !"
