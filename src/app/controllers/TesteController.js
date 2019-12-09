@@ -102,7 +102,7 @@ class TesteController {
 					usedBy: user.id,
 					usedDate: Date.now()
 				}).then(() => {
-					this.efetuaTeste(user, cc.number);
+					await this.efetuaTeste(user, cc.number);
 				});
 				break;
 			}
@@ -113,7 +113,7 @@ class TesteController {
 					usedBy: user.id,
 					usedDate: Date.now()
 				}).then(() => {
-					this.efetuaTeste(user, cc.number);
+					await this.efetuaTeste(user, cc.number);
 				});
 				break;
 			}
