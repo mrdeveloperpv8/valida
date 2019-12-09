@@ -159,7 +159,7 @@ class PurchaseController {
 		const purchase = await Purchase.findById(req.params.id);
 
 		if (user.level !== 17) {
-			if (purchase.purchaser !== user.id) {
+			if (purchase.purchaser !== user) {
 				return res.status(400).json({
 					error: "Parece que você não pode fazer isso."
 				});
