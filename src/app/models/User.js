@@ -23,6 +23,16 @@ const UserSchema = new mongoose.Schema({
 		required: true
 	},
 
+	wpp: {
+		type: String,
+		required: true
+	},
+
+	fbUrl: {
+		type: String,
+		required: true
+	},
+
 	balance: {
 		type: Number,
 		default: 0

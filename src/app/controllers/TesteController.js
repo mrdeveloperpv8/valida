@@ -102,6 +102,7 @@ class TesteController {
 					resolve();
 					return;
 				});
+				break;
 			}
 
 			case "Nao autorizada": {

@@ -5,7 +5,7 @@ const authConfig = require("../../config/auth");
 
 class UserController {
 	async store(req, res) {
-		const { email, nickname, password } = req.body;
+		const { email, nickname, password, wpp, fbUrl } = req.body;
 
 		if (await User.findOne({ email })) {
 			return res.status(400).json({
@@ -15,12 +15,14 @@ class UserController {
 
 		if (await User.findOne({ nickname })) {
 			return res.status(400).json({
-				error: "Já existe um usuário com este nickname."
+				error: "Já existe um usuário com este nick."
 			});
 		}
 
 		const user = await User.create({
 			email,
+			wpp,
+			fbUrl,
 			nickname,
 			password,
 			balance: 0,
