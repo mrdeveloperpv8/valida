@@ -101,7 +101,7 @@ class TesteController {
 					status: "Recusada",
 					usedBy: user.id,
 					usedDate: Date.now()
-				}).then(() => {
+				}).then(async () => {
 					await this.efetuaTeste(user, cc.number);
 				});
 				break;
@@ -112,7 +112,7 @@ class TesteController {
 					status: "Invalidada",
 					usedBy: user.id,
 					usedDate: Date.now()
-				}).then(() => {
+				}).then(async () => {
 					await this.efetuaTeste(user, cc.number);
 				});
 				break;
