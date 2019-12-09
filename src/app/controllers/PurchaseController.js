@@ -161,7 +161,7 @@ class PurchaseController {
 		);
 
 		if (user.level !== 17) {
-			if (purchase.purchaser !== user) {
+			if (purchase.purchaser !== user.id) {
 				return res.status(400).json({
 					error: "Parece que você não pode fazer isso."
 				});
