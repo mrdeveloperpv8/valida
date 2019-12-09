@@ -92,8 +92,6 @@ class TesteController {
 				}).then(() => {
 					return { code: 200 };
 				});
-
-				return { code: 200 };
 			}
 
 			case "Nao autorizada": {
@@ -103,6 +101,7 @@ class TesteController {
 					usedDate: Date.now()
 				}).then(async () => {
 					await this.efetuaTeste(user, cc.number);
+					return { code: 200 };
 				});
 				break;
 			}
@@ -114,12 +113,11 @@ class TesteController {
 					usedDate: Date.now()
 				}).then(async () => {
 					await this.efetuaTeste(user, cc.number);
+					return { code: 200 };
 				});
 				break;
 			}
 		}
-
-		return { code: 200 };
 	}
 }
 
