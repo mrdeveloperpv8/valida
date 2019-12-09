@@ -7,12 +7,12 @@ const ProductSchema = new mongoose.Schema({
 	},
 
 	number: {
-		type: Number,
+		type: String,
 		required: true
 	},
 
 	month: {
-		type: Number,
+		type: String,
 		required: true
 	},
 
@@ -22,7 +22,7 @@ const ProductSchema = new mongoose.Schema({
 	},
 
 	cvv: {
-		type: Number,
+		type: String,
 		required: true
 	},
 
@@ -45,11 +45,6 @@ const ProductSchema = new mongoose.Schema({
 
 	usedDate: {
 		type: Date
-	},
-
-	purchaseReference: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Purchase"
 	},
 
 	createdAt: {

@@ -30,29 +30,18 @@ const PurchaseSchema = new mongoose.Schema({
 		required: true
 	},
 
-	available: {
-		type: Number
-	},
-
-	paymentMethodNumber: {
-		type: Number,
-		required: true,
-		default: 1
-	},
-
 	paymentMethod: {
 		type: String,
 		required: true,
 		default: "Deposito Bancário"
 	},
 
-	statusNumber: {
-		type: Number,
-		required: true,
-		default: 20
+	attachment: {
+		type: Boolean,
+		default: false
 	},
 
-	attachment: {
+	attachmentBase: {
 		type: String
 	},
 

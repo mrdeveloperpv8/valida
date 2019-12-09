@@ -20,6 +20,12 @@ routes.get(
 	controllers.UserController.checkPremium
 );
 
+routes.post(
+	"/test",
+	authMiddleware,
+	controllers.TesteController.test.bind(controllers.TesteController)
+);
+
 routes.post("/active/:id", authMiddleware, controllers.UserController.active);
 routes.post("/premium/:id", authMiddleware, controllers.UserController.premium);
 routes.post("/user/verify", authMiddleware, controllers.UserController.verify);
@@ -40,11 +46,21 @@ routes.get(
 );
 
 routes.get(
-	"/products/:user",
+	"/productsUser",
 	authMiddleware,
-	controllers.ProductController.indexByUser
+	controllers.ProductController.indexUser
 );
-routes.post("/products/", authMiddleware, controllers.ProductController.store);
+
+routes.get(
+	"/totalizadores",
+	authMiddleware,
+	controllers.UserController.totalizadores
+);
+
+routes.get("/products", authMiddleware, controllers.ProductController.index);
+
+routes.post("/products", authMiddleware, controllers.ProductController.store);
+
 routes.delete(
 	"/products/:id",
 	authMiddleware,
@@ -75,6 +91,8 @@ routes.post(
 	authMiddleware,
 	controllers.PurchaseController.store
 );
+
+routes.post("/base64", authMiddleware, controllers.PurchaseController.base64);
 
 routes.post(
 	"/purchase",

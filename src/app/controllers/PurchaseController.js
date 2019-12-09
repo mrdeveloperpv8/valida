@@ -15,12 +15,18 @@ class PurchaseController {
 		let purchases = null;
 
 		if (user.level == 17) {
-			purchases = await Purchase.find({
-				showcase: false,
-				purchaser: { $ne: null }
-			}).populate("purchaser");
+			purchases = await Purchase.find(
+				{
+					showcase: false,
+					purchaser: { $ne: null }
+				},
+				{ attachmentBase: 0 }
+			).populate("purchaser");
 		} else {
-			purchases = await Purchase.find({ purchaser: user });
+			purchases = await Purchase.find(
+				{ purchaser: user },
+				{ attachmentBase: 0 }
+			);
 		}
 
 		return res.json(purchases);
@@ -48,11 +54,28 @@ class PurchaseController {
 			});
 		}
 
-		const purchases = await Purchase.find({
-			purchaser: user
-		});
+		const purchases = await Purchase.find(
+			{
+				purchaser: user
+			},
+			{ attachmentBase: 0 }
+		);
 
 		return res.json(purchases);
+	}
+
+	async base64(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const purchase = await Purchase.findById(req.body.purchase);
+
+		return res.json(purchase.attachmentBase);
 	}
 
 	async cancelPurchase(req, res) {
@@ -108,7 +131,8 @@ class PurchaseController {
 					const userPurchase = await User.findById(
 						purchase.purchaser
 					);
-					await User.findByIdAndUpdate(user.id, {
+
+					await User.findByIdAndUpdate(userPurchase.id, {
 						balance: userPurchase.balance + purchase.ammount
 					});
 				}
@@ -144,7 +168,8 @@ class PurchaseController {
 		const { attachment } = req.body;
 
 		const purchasesUpdated = await Purchase.findByIdAndUpdate(purchase.id, {
-			attachment: attachment,
+			attachment: true,
+			attachmentBase: attachment,
 			status: "Analise"
 		});
 
@@ -169,7 +194,7 @@ class PurchaseController {
 		const dataCode = `${user}-${showcase.price}+${showcase.price}.${Date.now}`;
 		const code = await bcrypt.hash(dataCode, 3);
 
-		const { paymentMethodNumber, paymentMethod } = req.body;
+		const { paymentMethod } = req.body;
 		const purchase = await Purchase.create({
 			title: showcase.title,
 			description: showcase.description,
@@ -178,9 +203,7 @@ class PurchaseController {
 			price: showcase.price,
 			ammount: showcase.ammount,
 			available: 0,
-			paymentMethodNumber: paymentMethodNumber,
 			paymentMethod: paymentMethod,
-			statusNumber: 20,
 			status: "Pendente",
 			showcase: false
 		});
@@ -191,14 +214,7 @@ class PurchaseController {
 	async storeShowcase(req, res) {
 		const user = await User.findById(req.userId);
 
-		const {
-			title,
-			description,
-			price,
-			ammount,
-			paymentMethodNumber,
-			paymentMethod
-		} = req.body;
+		const { title, description, price, ammount, paymentMethod } = req.body;
 
 		if (!user) {
 			return res.status(400).json({
@@ -222,9 +238,7 @@ class PurchaseController {
 			price: price,
 			ammount: ammount,
 			available: 0,
-			paymentMethodNumber: paymentMethodNumber,
 			paymentMethod: paymentMethod,
-			statusNumber: 20,
 			status: "Pendente",
 			showcase: true
 		});
@@ -247,11 +261,11 @@ class PurchaseController {
 			});
 		}
 
-		const { available, statusNumber, status } = req.body;
+		const { available, status } = req.body;
 
 		const purchase = await Purchase.findByIdAndUpdate(
 			req.params.id,
-			{ available, statusNumber, status },
+			{ available, status },
 			{ new: true }
 		);
 

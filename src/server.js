@@ -18,12 +18,14 @@ class App {
 		mongoose.connect(databaseConfig.uri, {
 			useCreateIndex: true,
 			useNewUrlParser: true,
-			useUnifiedTopology: true
+			useUnifiedTopology: true,
+			useFindAndModify: false
 		});
 	}
 
 	middlewares() {
 		this.express.use(bodyParser.json({ limit: "20mb" }));
+		this.express.use(bodyParser.urlencoded({ extended: false }));
 		this.express.use(express.json());
 		this.express.use(cors());
 	}

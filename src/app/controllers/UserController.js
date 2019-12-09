@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const Purchase = require("../models/Purchase");
+const Product = require("../models/Product");
 const authConfig = require("../../config/auth");
 
 class UserController {
@@ -53,6 +55,33 @@ class UserController {
 		const users = await User.find();
 
 		return res.json({ users });
+	}
+
+	async totalizadores(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const totalUsers = await User.countDocuments();
+		const totalCompras = await Purchase.countDocuments({ showcase: false });
+		const totalComprasPagamento = await Purchase.countDocuments({
+			showcase: false,
+			status: "Pendente"
+		});
+		const totalAprovada = await Product.countDocuments({
+			status: "Aprovada"
+		});
+
+		return res.json({
+			totalAguardadnoPagemento: totalComprasPagamento,
+			totalAprovadas: totalAprovada,
+			totalCompras: totalCompras,
+			totalMembros: totalUsers
+		});
 	}
 
 	async active(req, res) {
