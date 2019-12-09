@@ -59,7 +59,7 @@ class PurchaseController {
 				purchaser: user
 			},
 			{ attachmentBase: 0 }
-		);
+		).sort({ createdAt: 1 });
 
 		return res.json(purchases);
 	}
