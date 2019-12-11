@@ -103,7 +103,6 @@ class TesteController {
 						usedBy: user.id,
 						usedDate: Date.now()
 					}).then(async () => {
-						// req.io.emit('approved', cc)
 						code = 200;
 						qtd = qtd + 1;
 						code = await this.efetuaTeste(

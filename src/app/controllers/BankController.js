@@ -11,12 +11,6 @@ class BankController {
 			});
 		}
 
-		if (user.level !== 17) {
-			return res.status(400).json({
-				error: "Parece que você não pode fazer isso."
-			});
-		}
-
 		const bank = await Bank.find();
 
 		return res.json(bank);
