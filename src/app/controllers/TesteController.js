@@ -90,29 +90,31 @@ class TesteController {
 
 		switch (result) {
 			case "Autorizado": {
-				await User.update(
-					{ _id: user.id },
-					{
-						$inc: { balance: -1 }
-					}
-				);
-
-				await Product.findByIdAndUpdate(cc.id, {
-					status: "Aprovada",
-					usedBy: user.id,
-					usedDate: Date.now()
-				}).then(async () => {
-					code = 200;
-					qtd = qtd + 1;
-					code = await this.efetuaTeste(
-						user,
-						cc.number,
-						ammount,
-						qtd,
-						code
+				if (user.balance > 0) {
+					await User.update(
+						{ _id: user.id },
+						{
+							$inc: { balance: -1 }
+						}
 					);
-					return code;
-				});
+
+					await Product.findByIdAndUpdate(cc.id, {
+						status: "Aprovada",
+						usedBy: user.id,
+						usedDate: Date.now()
+					}).then(async () => {
+						code = 200;
+						qtd = qtd + 1;
+						code = await this.efetuaTeste(
+							user,
+							cc.number,
+							ammount,
+							qtd,
+							code
+						);
+						return code;
+					});
+				}
 
 				break;
 			}
