@@ -90,7 +90,8 @@ class TesteController {
 
 		switch (result) {
 			case "Autorizado": {
-				if (user.balance > 0) {
+				const userBalanceAtual = await User.findById(user._id);
+				if (userBalanceAtual.balance > 0) {
 					await User.update(
 						{ _id: user.id },
 						{
