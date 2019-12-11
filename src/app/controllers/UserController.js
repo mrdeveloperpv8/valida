@@ -154,6 +154,30 @@ class UserController {
 		return res.json({ ammount: user.balance });
 	}
 
+	async updateBalance(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const { userId, balance } = req.body;
+
+		const userModified = await User.findByIdAndUpdate(userId, {
+			balance: balance
+		});
+
+		return res.json(userModified);
+	}
+
 	async verify(req, res) {
 		const { id } = req.body;
 

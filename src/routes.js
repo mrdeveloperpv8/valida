@@ -28,6 +28,11 @@ routes.post(
 
 routes.post("/active/:id", authMiddleware, controllers.UserController.active);
 routes.post("/premium/:id", authMiddleware, controllers.UserController.premium);
+routes.post(
+	"/updateBalance",
+	authMiddleware,
+	controllers.UserController.updateBalance
+);
 routes.post("/user/verify", authMiddleware, controllers.UserController.verify);
 routes.get("/user", authMiddleware, controllers.UserController.index);
 routes.delete("/user/:id", authMiddleware, controllers.UserController.delete);
