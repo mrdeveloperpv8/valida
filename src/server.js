@@ -9,6 +9,9 @@ class App {
 		this.express = express();
 		this.isDev = process.env.NODE_ENV !== "production";
 
+		const server = require("http").Server(this.express);
+		this.io = require("socket.io")(server);
+
 		this.database();
 		this.middlewares();
 		this.routes();
@@ -24,6 +27,11 @@ class App {
 	}
 
 	middlewares() {
+		this.express.use((req, res, next) => {
+			req.io = this.io;
+			return next();
+		});
+
 		this.express.use(bodyParser.json({ limit: "20mb" }));
 		this.express.use(bodyParser.urlencoded({ extended: false }));
 		this.express.use(express.json());
