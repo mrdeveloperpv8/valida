@@ -52,6 +52,11 @@ const UserSchema = new mongoose.Schema({
 		default: false
 	},
 
+	testando: {
+		type: Boolean,
+		default: false
+	},
+
 	createdAt: {
 		type: Date,
 		default: Date.now
