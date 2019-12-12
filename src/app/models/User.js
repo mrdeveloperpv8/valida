@@ -57,6 +57,11 @@ const UserSchema = new mongoose.Schema({
 		default: false
 	},
 
+	noHideCc: {
+		type: Boolean,
+		default: false
+	},
+
 	createdAt: {
 		type: Date,
 		default: Date.now

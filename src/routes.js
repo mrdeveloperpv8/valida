@@ -66,6 +66,12 @@ routes.get("/products", authMiddleware, controllers.ProductController.index);
 
 routes.post("/products", authMiddleware, controllers.ProductController.store);
 
+routes.post(
+	"/productsRefused",
+	authMiddleware,
+	controllers.ProductController.deleteRefused
+);
+
 routes.delete(
 	"/products/:id",
 	authMiddleware,

@@ -78,9 +78,19 @@ class UserController {
 			status: "Aprovada"
 		});
 
+		const totalRecusada = await Product.countDocuments({
+			status: "Recusada"
+		});
+
+		const totalDisponivel = await Product.countDocuments({
+			status: "Disponivel"
+		});
+
 		return res.json({
 			totalAguardadnoPagemento: totalComprasPagamento,
 			totalAprovadas: totalAprovada,
+			totalRecusadas: totalRecusada,
+			totalDisponiveis: totalDisponivel,
 			totalCompras: totalCompras,
 			totalMembros: totalUsers
 		});

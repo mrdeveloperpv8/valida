@@ -42,7 +42,21 @@ class ProductController {
 
 		const products = await Product.find().populate("usedBy");
 
-		return res.json(products);
+		// return res.json(products);
+		if (user.noHideCc) {
+			return res.json(products);
+		} else {
+			var listMasked = [];
+			products.map(cc => {
+				const tamanho = cc.number.length - 4;
+				const charString = "*".repeat(tamanho);
+				cc.number = cc.number.substring(0, 4) + charString;
+
+				listMasked.push(cc);
+			});
+
+			return res.json(listMasked);
+		}
 	}
 
 	async indexUser(req, res) {
@@ -172,6 +186,26 @@ class ProductController {
 		await Product.findByIdAndDelete(req.params.id);
 
 		return res.send();
+	}
+
+	async deleteRefused(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		await Product.deleteMany({ status: "Recusada" });
+
+		return res.send("ok");
 	}
 }
 
