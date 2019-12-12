@@ -1,6 +1,7 @@
 const Purchase = require("../models/Purchase");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const Coinpayments = require("coinpayments");
 
 class PurchaseController {
 	async index(req, res) {
@@ -13,6 +14,42 @@ class PurchaseController {
 		}
 
 		let purchases = null;
+
+		var purchasesBtc = await Purchase.find({
+			paymentMethod: "BTC - Bitcoin"
+		});
+
+		purchasesBtc.map(async purchase => {
+			const client = new Coinpayments({
+				key:
+					"75a30d14cbe00ee0012dcbbd2df9e8aea4899899e5e8e0739ee076a2ecfba9c1",
+				secret:
+					"Fc587d2a5724e8E6Ee8Bd130586871058d151343E89F153D03c097A00571f3bE"
+			});
+
+			await client
+				.getTx({ txid: purchase.btcPaymentId })
+				.then(async result => {
+					if (result.status == 1) {
+						await Purchase.findByIdAndUpdate(purchase._id, {
+							status: "Aprovado",
+							btcPaymentStatus: result.status
+						}).then(async () => {
+							const userPurchase = await User.findById(
+								purchase.purchaser
+							);
+
+							await User.findByIdAndUpdate(userPurchase.id, {
+								balance: userPurchase.balance + purchase.ammount
+							});
+						});
+					}
+
+					await Purchase.findByIdAndUpdate(purchase._id, {
+						btcTimeExpire: result.time_expires
+					});
+				});
+		});
 
 		if (user.level == 17) {
 			purchases = await Purchase.find(
@@ -54,6 +91,43 @@ class PurchaseController {
 			});
 		}
 
+		var purchasesBtc = await Purchase.find({
+			paymentMethod: "BTC - Bitcoin"
+		});
+
+		purchasesBtc.map(async purchase => {
+			const client = new Coinpayments({
+				key:
+					"75a30d14cbe00ee0012dcbbd2df9e8aea4899899e5e8e0739ee076a2ecfba9c1",
+				secret:
+					"Fc587d2a5724e8E6Ee8Bd130586871058d151343E89F153D03c097A00571f3bE"
+			});
+
+			await client
+				.getTx({ txid: purchase.btcPaymentId })
+				.then(async result => {
+					console.log(result);
+					if (result.status == 1) {
+						await Purchase.findByIdAndUpdate(purchase._id, {
+							status: "Aprovado",
+							btcPaymentStatus: result.status
+						}).then(async () => {
+							const userPurchase = await User.findById(
+								purchase.purchaser
+							);
+
+							await User.findByIdAndUpdate(userPurchase.id, {
+								balance: userPurchase.balance + purchase.ammount
+							});
+						});
+					}
+
+					await Purchase.findByIdAndUpdate(purchase._id, {
+						btcTimeExpire: result.time_expires
+					});
+				});
+		});
+
 		const purchases = await Purchase.find(
 			{
 				purchaser: user
@@ -87,10 +161,12 @@ class PurchaseController {
 			});
 		}
 
-		const purchase = await Purchase.findById(req.params.id);
+		const purchase = await Purchase.findById(req.params.id).populate(
+			"purchaser"
+		);
 
 		if (user.level !== 17) {
-			if (purchase.purchaser !== user.id) {
+			if (purchase.purchaser.id !== req.userId) {
 				return res.status(400).json({
 					error: "Parece que você não pode fazer isso."
 				});
@@ -197,6 +273,34 @@ class PurchaseController {
 		const code = await bcrypt.hash(dataCode, 3);
 
 		const { paymentMethod } = req.body;
+
+		var btcPaymentId = null;
+		var btcPaymentUrl = null;
+		var btcPaymentStatus = 0;
+
+		if (paymentMethod == "BTC - Bitcoin") {
+			const client = new Coinpayments({
+				key:
+					"75a30d14cbe00ee0012dcbbd2df9e8aea4899899e5e8e0739ee076a2ecfba9c1",
+				secret:
+					"Fc587d2a5724e8E6Ee8Bd130586871058d151343E89F153D03c097A00571f3bE"
+			});
+
+			const optionsTransaction = {
+				currency1: "BRL",
+				currency2: "BTC",
+				amount: showcase.price,
+				buyer_email: user.email,
+				address: "12QzCy4Cy6eH8yfSje3oVSBAaqZJMd7hB7"
+			};
+
+			await client.createTransaction(optionsTransaction).then(result => {
+				btcPaymentId = result.txn_id;
+				btcPaymentStatus = 0;
+				btcPaymentUrl = result.checkout_url;
+			});
+		}
+
 		const purchase = await Purchase.create({
 			title: showcase.title,
 			description: showcase.description,
@@ -207,7 +311,10 @@ class PurchaseController {
 			available: 0,
 			paymentMethod: paymentMethod,
 			status: "Pendente",
-			showcase: false
+			showcase: false,
+			btcPaymentId: btcPaymentId,
+			btcPaymentStatus: btcPaymentStatus,
+			btcPaymentUrl: btcPaymentUrl
 		});
 
 		return res.json(purchase);

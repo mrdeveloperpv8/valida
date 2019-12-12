@@ -57,6 +57,22 @@ const PurchaseSchema = new mongoose.Schema({
 		default: false
 	},
 
+	btcPaymentStatus: {
+		type: Number
+	},
+
+	btcPaymentId: {
+		type: String
+	},
+
+	btcPaymentUrl: {
+		type: String
+	},
+
+	btcTimeExpire: {
+		type: Number
+	},
+
 	createdAt: {
 		type: Date,
 		default: Date.now
