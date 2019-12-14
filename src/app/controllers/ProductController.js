@@ -208,15 +208,46 @@ class ProductController {
 		return res.send("ok");
 	}
 
+	async refusedList(req, res) {
+		const user = await User.findById(req.userId);
+
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		const products = await Product.find({
+			status: "Recusada"
+		});
+
+		var list = "";
+
+		await products.map(product => {
+			list =
+				list +
+				`\n ${product.number}|${product.month}|${product.year}|${product.cvv}`;
+		});
+
+		return res.json(list);
+	}
+
 	// async fix(req, res) {
 	// 	await Product.updateMany(
 	// 		{
 	// 			usedDate: {
-	// 				$gte: new Date("2019-12-13T00:00:00"),
-	// 				$lt: new Date("2019-12-13T23:00:00")
-	// 			}
+	// 				$gte: new Date("2019-12-14T00:00:00"),
+	// 				$lt: new Date("2019-12-14T23:00:00")
+	// 			},
+	// 			status: "Recusada"
 	// 		},
-	// 		{ status: "Disponivel" }
+	// 		{ status: "Disponivel", usedBy: null, usedDate: null }
 	// 	);
 
 	// 	return res.send("ok");
