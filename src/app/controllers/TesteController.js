@@ -122,7 +122,7 @@ class TesteController {
 				<numero-bilhete>123456</numero-bilhete>
 			</dados-pedido>
 			<forma-pagamento>
-				<bandeira>visa</bandeira>
+				<bandeira>${cc.flag}</bandeira>
 				<produto>1</produto>
 				<parcelas>1</parcelas>
 			</forma-pagamento>
