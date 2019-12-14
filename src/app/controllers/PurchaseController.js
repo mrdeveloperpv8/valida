@@ -45,6 +45,13 @@ class PurchaseController {
 						});
 					}
 
+					if (result.status == -1) {
+						await Purchase.findByIdAndUpdate(purchase._id, {
+							status: "Cancelado",
+							btcPaymentStatus: result.status
+						});
+					}
+
 					await Purchase.findByIdAndUpdate(purchase._id, {
 						btcTimeExpire: result.time_expires
 					});
@@ -118,6 +125,13 @@ class PurchaseController {
 							await User.findByIdAndUpdate(userPurchase.id, {
 								balance: userPurchase.balance + purchase.ammount
 							});
+						});
+					}
+
+					if (result.status == -1) {
+						await Purchase.findByIdAndUpdate(purchase._id, {
+							status: "Cancelado",
+							btcPaymentStatus: result.status
 						});
 					}
 
