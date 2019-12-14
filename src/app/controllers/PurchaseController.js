@@ -106,7 +106,6 @@ class PurchaseController {
 			await client
 				.getTx({ txid: purchase.btcPaymentId })
 				.then(async result => {
-					console.log(result);
 					if (result.status == 1) {
 						await Purchase.findByIdAndUpdate(purchase._id, {
 							status: "Aprovado",

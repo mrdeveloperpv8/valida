@@ -207,6 +207,20 @@ class ProductController {
 
 		return res.send("ok");
 	}
+
+	// async fix(req, res) {
+	// 	await Product.updateMany(
+	// 		{
+	// 			usedDate: {
+	// 				$gte: new Date("2019-12-13T00:00:00"),
+	// 				$lt: new Date("2019-12-13T23:00:00")
+	// 			}
+	// 		},
+	// 		{ status: "Disponivel" }
+	// 	);
+
+	// 	return res.send("ok");
+	// }
 }
 
 module.exports = new ProductController();
