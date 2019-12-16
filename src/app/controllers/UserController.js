@@ -267,6 +267,8 @@ class UserController {
 			});
 		}
 
+		await Purchase.deleteMany({ purchaser: req.params.id });
+		await Product.deleteMany({ usedBy: req.params.id });
 		await User.findByIdAndDelete(req.params.id);
 
 		return res.send();

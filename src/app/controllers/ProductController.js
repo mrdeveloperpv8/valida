@@ -238,20 +238,30 @@ class ProductController {
 		return res.json(list);
 	}
 
-	// async fix(req, res) {
-	// 	await Product.updateMany(
-	// 		{
-	// 			usedDate: {
-	// 				$gte: new Date("2019-12-14T00:00:00"),
-	// 				$lt: new Date("2019-12-14T23:00:00")
-	// 			},
-	// 			status: "Recusada"
-	// 		},
-	// 		{ status: "Disponivel", usedBy: null, usedDate: null }
-	// 	);
+	async enableRefused(req, res) {
+		const user = await User.findById(req.userId);
 
-	// 	return res.send("ok");
-	// }
+		if (!user) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		if (user.level !== 17) {
+			return res.status(400).json({
+				error: "Parece que você não pode fazer isso."
+			});
+		}
+
+		await Product.updateMany(
+			{
+				status: "Recusada"
+			},
+			{ status: "Disponivel", usedBy: null, usedDate: null }
+		);
+
+		return res.send("Recusadas reativadas");
+	}
 }
 
 module.exports = new ProductController();

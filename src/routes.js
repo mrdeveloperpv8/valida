@@ -51,6 +51,12 @@ routes.get(
 );
 
 routes.get(
+	"/enableRefused",
+	authMiddleware,
+	controllers.ProductController.enableRefused
+);
+
+routes.get(
 	"/refusedList",
 	authMiddleware,
 	controllers.ProductController.refusedList
