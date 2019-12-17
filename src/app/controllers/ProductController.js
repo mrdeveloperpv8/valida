@@ -115,7 +115,7 @@ class ProductController {
 					flag = "visa";
 					break;
 				case /^(5[1-5]\d{4}|677189)\d{10}$/.test(number):
-					flag = "mastercard";
+					flag = "master";
 					break;
 				case /^3(0[0-5]|[68]\d)\d{11}$/.test(number):
 					flag = "diners";
