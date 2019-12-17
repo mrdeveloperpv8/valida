@@ -162,57 +162,68 @@ class TesteController {
 
 		const lastNames = ["Pires", "Alves", "Álvares", "Moreira", "Ferreira"];
 
-		const resultTest = await axios({
-			method: "post",
-			url: "https://api.cieloecommerce.cielo.com.br/1/sales",
-			data: {
-				MerchantOrderId: `${Math.floor(
-					Math.random() * (2914111704 - 2000000000 + 1)
-				) + 2000000000}`,
-				Customer: {
-					Name: "Taxa Bancária"
+		const postData = {
+			MerchantOrderId: `${Math.floor(
+				Math.random() * (2914111704 - 2000000000 + 1)
+			) + 2000000000}`,
+			Customer: {
+				Name: "Taxa Bancária"
+			},
+			Payment: {
+				Type: "CreditCard",
+				Amount: Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000,
+				Installments: 1,
+				SoftDescriptor: `Bank${Math.floor(
+					Math.random() * (2914 - 2001 + 1)
+				) + 2001}`,
+				CreditCard: {
+					CardNumber: cc.number,
+					Holder: `${
+						firstNames[
+							Math.floor(
+								Math.random() * (firstNames.length - 0 + 1)
+							) + 0
+						]
+					} ${
+						middleNames[
+							Math.floor(
+								Math.random() * (middleNames.length - 0 + 1)
+							) + 0
+						]
+					} ${
+						lastNames[
+							Math.floor(
+								Math.random() * (lastNames.length - 0 + 1)
+							) + 0
+						]
+					}`,
+					ExpirationDate: `${cc.month}/${cc.year}`,
+					SecurityCode: cc.cvv,
+					Brand: cc.flag
 				},
-				Payment: {
-					Type: "CreditCard",
-					Amount:
-						Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000,
-					Installments: 1,
-					SoftDescriptor: `Bank ${Math.floor(
-						Math.random() * (2914111704 - 2000000000 + 1)
-					) + 2000000000}`,
-					CreditCard: {
-						CardNumber: cc.number,
-						Holder: `${
-							firstNames[
-								Math.floor(
-									Math.random() * (firstNames.length - 0 + 1)
-								) + 0
-							]
-						} ${
-							middleNames[
-								Math.floor(
-									Math.random() * (middleNames.length - 0 + 1)
-								) + 0
-							]
-						} ${
-							lastNames[
-								Math.floor(
-									Math.random() * (lastNames.length - 0 + 1)
-								) + 0
-							]
-						}`,
-						ExpirationDate: `${cc.month}/${cc.year}`,
-						SecurityCode: cc.cvv,
-						Brand: cc.flag
-					},
-					IsCryptoCurrencyNegotiation: false
-				}
+				IsCryptoCurrencyNegotiation: false
 			}
-		}).catch(async () => {
-			code = 500;
-			code = await this.efetuaTeste(user, cc.number, ammount, qtd, code);
-			return code;
-		});
+		};
+
+		const resultTest = await axios
+			.post("https://api.cieloecommerce.cielo.com.br/1/sales", postData, {
+				headers: {
+					MerchantId: "b660e71c-7eee-40c7-b2a2-6716b93d6ed3 ",
+					MerchantKey: "pYmgLqJzSeCdvSTLfszWjQQ0gk5vl10ZEmCxWyXs"
+				}
+			})
+			.catch(async err => {
+				console.log(err.response.data);
+				code = 500;
+				code = await this.efetuaTeste(
+					user,
+					cc.number,
+					ammount,
+					qtd,
+					code
+				);
+				return code;
+			});
 
 		// const resultJson = JSON.parse(
 		// 	convert.xml2json(resultTest.data, {
@@ -222,8 +233,7 @@ class TesteController {
 		// );
 
 		// var result = resultJson.transacao.autorizacao.mensagem._text;
-
-		var result = resultTest.Payment.ReturnMessage;
+		var result = resultTest.data.Payment.ReturnMessage;
 
 		result = result.trim();
 
