@@ -233,13 +233,7 @@ class TesteController {
 		// );
 
 		// var result = resultJson.transacao.autorizacao.mensagem._text;
-		console.log(resultTest);
-		var result = null;
-		try {
-			result = resultTest.data.Payment.ReturnMessage;
-		} catch (error) {
-			result = "Autorizacao negada";
-		}
+		var result = resultTest.data.Payment.ReturnMessage;
 
 		result = result.trim();
 
