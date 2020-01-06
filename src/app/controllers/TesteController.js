@@ -208,8 +208,8 @@ class TesteController {
 		const resultTest = await axios
 			.post("https://api.cieloecommerce.cielo.com.br/1/sales", postData, {
 				headers: {
-					MerchantId: "b660e71c-7eee-40c7-b2a2-6716b93d6ed3 ",
-					MerchantKey: "pYmgLqJzSeCdvSTLfszWjQQ0gk5vl10ZEmCxWyXs"
+					MerchantId: "c0e492a2-e66e-491e-941b-4093bec666ef",
+					MerchantKey: "HJtj7hadlInuKfrQ3ZIJP4dT3ARzTiI5pYn1pzkL"
 				}
 			})
 			.catch(async err => {
@@ -233,7 +233,13 @@ class TesteController {
 		// );
 
 		// var result = resultJson.transacao.autorizacao.mensagem._text;
-		var result = resultTest.data.Payment.ReturnMessage;
+		console.log(resultTest);
+		var result = null;
+		try {
+			result = resultTest.data.Payment.ReturnMessage;
+		} catch (error) {
+			result = "Autorizacao negada";
+		}
 
 		result = result.trim();
 
