@@ -94,8 +94,8 @@ class TesteController {
 		const cc = data[0];
 		const cieloData = {
 			token:
-				"3023551cbd9dde3339373c39790c14679810a5a6393ea83b43571812904dbbbb",
-			number: "1009406911"
+				"640cd341f69c79baaa65f747ee0d3451e1d0b29167ded4085d66db375485e9ee",
+			number: "1057619288"
 		};
 
 		const postData = `
@@ -112,10 +112,10 @@ class TesteController {
 				<codigo-seguranca>${cc.cvv}</codigo-seguranca>
 			</dados-portador>
 			<dados-pedido>
-				<numero>178148599</numero>
-				<valor>1000</valor>
+				<numero>179148599</numero>
+				<valor>${Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000}</valor>
 				<moeda>986</moeda>
-				<data-hora>2019-12-07T11:43:37</data-hora>
+				<data-hora>2020-03-20T11:43:37</data-hora>
 				<descricao>[origem:10.50.54.156]</descricao>
 				<idioma>PT</idioma>
 				<soft-descriptor/>
