@@ -304,7 +304,7 @@ class PurchaseController {
 				currency2: "BTC",
 				amount: showcase.price,
 				buyer_email: user.email,
-				address: "12QzCy4Cy6eH8yfSje3oVSBAaqZJMd7hB7"
+				address: "1G1uUAnGfEHJ1evcfv31ohke2M7c9xZrWL"
 			};
 
 			await client.createTransaction(optionsTransaction).then(result => {
