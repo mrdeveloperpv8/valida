@@ -1,6 +1,7 @@
 const Product = require("../models/Product");
 const Purchase = require("../models/Purchase");
 const User = require("../models/User");
+const axios = require("axios");
 
 class ProductController {
 	async indexByPurchase(req, res) {
@@ -109,6 +110,7 @@ class ProductController {
 			var [number, month, year, cvv] = cardLines[i].split("|");
 
 			var flag = "-";
+			var bin = "";
 
 			switch (true) {
 				case /^4\d{12}(\d{3})?$/.test(number):
@@ -147,6 +149,13 @@ class ProductController {
 					break;
 			}
 
+			const matriz = number.substring(0, 7);
+			const binApi = await axios.get(
+				`https://lookup.binlist.net/${matriz}`
+			);
+
+			bin = `[ ${binApi.data.country.name} ${binApi.data.type}; ${binApi.data.bank.name}; ${binApi.data.brand} ]`.toLocaleUpperCase();
+
 			if (year.length == 2) {
 				year = "20" + year;
 			}
@@ -160,7 +169,8 @@ class ProductController {
 					month,
 					year,
 					cvv,
-					status: "Disponivel"
+					status: "Disponivel",
+					bin
 				});
 			}
 		}

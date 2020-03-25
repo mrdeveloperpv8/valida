@@ -94,8 +94,8 @@ class TesteController {
 		const cc = data[0];
 		const cieloData = {
 			token:
-				"640cd341f69c79baaa65f747ee0d3451e1d0b29167ded4085d66db375485e9ee",
-			number: "1057619288"
+				"befa47dc971a5201784e373874a0e2fe65fd0ecccf4c4ae74cab91579e45e5fb",
+			number: "1019705318"
 		};
 
 		const postData = `

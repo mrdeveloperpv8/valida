@@ -38,6 +38,12 @@ const ProductSchema = new mongoose.Schema({
 		default: "Disponivel"
 	},
 
+	bin: {
+		type: String,
+		required: true,
+		default: "Não definido"
+	},
+
 	usedBy: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User"
