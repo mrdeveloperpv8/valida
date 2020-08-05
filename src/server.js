@@ -26,6 +26,9 @@ class App {
 		this.express.use(bodyParser.urlencoded({ extended: false }));
 		this.express.use(express.json());
 		this.express.use(cors());
+
+		var timeout = require("connect-timeout"); //express v4
+		this.express.use(timeout(70000));
 	}
 
 	routes() {
