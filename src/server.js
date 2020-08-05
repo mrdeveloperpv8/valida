@@ -12,18 +12,8 @@ class App {
 		const server = require("http").Server(this.express);
 		this.io = require("socket.io")(server);
 
-		this.database();
 		this.middlewares();
 		this.routes();
-	}
-
-	database() {
-		mongoose.connect(databaseConfig.uri, {
-			useCreateIndex: true,
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			useFindAndModify: false
-		});
 	}
 
 	middlewares() {
